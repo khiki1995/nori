@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#0D1015"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NORI"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><title>NORI</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="top">
+<div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 8H24L16 25Z"/><circle cx="8" cy="8" r="3.6"/><circle cx="24" cy="8" r="3.6"/><circle cx="16" cy="25" r="3.6"/></svg><h1 data-i18n="title"></h1><span class="ver" id="ver"></span></div>
+<nav class="nav" id="nav"><button id="navPlay" class="tab on" aria-current="page"><span data-i18n="navPlay"></span></button><button id="navTasks" class="tab" aria-current="false"><span data-i18n="navTasks"></span></button><button id="navGames" class="tab" aria-current="false"><span data-i18n="navGames"></span></button><button id="navLab" class="tab" aria-current="false"><span data-i18n="navLab"></span></button><button id="navProfile" class="tab" aria-current="false"><span data-i18n="navProfile"></span></button></nav>
+<div class="statusrow"><span id="playerIdentity" class="player-identity" aria-live="polite"></span><span id="modeChip" class="schip"></span><span id="onlineBadge" class="schip" role="status"></span><span id="save" role="status"></span></div>
+<div class="tools">
+<label class="sel"><span aria-hidden="true">🌐</span><span class="sr" data-i18n="lang"></span><select id="lang"></select></label>
+<label class="sel"><span class="lbl" data-i18n="mode"></span><select id="mode"><option value="hvh" data-i18n="modeHvh"></option><option value="ai" data-i18n="modeAi"></option></select></label>
+<button id="new" class="primary"><span class="ic" aria-hidden="true">＋</span><span class="lb" data-i18n="newGame"></span></button>
+<button id="undo"><span class="ic" aria-hidden="true">↶</span><span class="lb" data-i18n="undo"></span></button>
+<button id="onlineBtn"><span class="ic" aria-hidden="true">⇆</span><span class="lb" data-i18n="online"></span></button>
+<div class="menuwrap"><button id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menu"><span class="ic" aria-hidden="true">⋯</span><span class="lb" data-i18n="menu"></span></button>
+<div id="menu" class="menu" hidden>
+<button id="rules"><span class="ic" aria-hidden="true">?</span><span class="lb" data-i18n="rules"></span></button>
+<button id="settingsBtn"><span class="ic" aria-hidden="true">⚙</span><span class="lb" data-i18n="settings"></span></button>
+<button id="exportBtn"><span class="ic" aria-hidden="true">⇩</span><span class="lb" data-i18n="exportBtn"></span></button>
+<button id="importBtn"><span class="ic" aria-hidden="true">⇧</span><span class="lb" data-i18n="importBtn"></span></button>
+<button id="selftest"><span class="ic" aria-hidden="true">✓</span><span class="lb" data-i18n="selftest"></span></button>
+</div></div>
+</div></header>
+<p id="notice" role="status"></p>
+<main id="screenPlay">
+<section id="left"><div id="phase" class="phase" role="status"></div><div class="boardwrap" dir="ltr"><svg id="board" viewBox="0 0 520 520" role="group"></svg></div><p class="legend" id="legend"></p></section>
+<section id="right"><div id="intro" class="intro" hidden><p data-i18n="tourPrompt"></p><div class="actions"><button id="tourStart" class="primary" data-i18n="tourStart"></button><button id="tourDismiss" class="ghost" data-i18n="tourDismiss"></button></div></div><div id="cards"></div><div id="panel"></div><div id="tests" hidden></div></section>
+</main>
+<main id="screenTasks" class="tasksmain" hidden></main>
+<main id="screenGames" class="extrascreen" hidden></main>
+<main id="screenLab" class="extrascreen" hidden></main>
+<main id="screenProfile" class="extrascreen" hidden></main>
+<section id="hist"><h2 data-i18n="history"></h2><ol id="log"></ol></section>
+<dialog id="dlgRules"><h2 id="rulesTitle"></h2><div class="rules" id="rulesBody"></div><div class="actions"><button id="rulesTour" data-i18n="help"></button><button id="rulesClose" class="primary" data-i18n="close"></button></div></dialog>
+<dialog id="dlgTour"><h2 data-i18n="help"></h2><p id="tourText" class="tourtext"></p><div id="tourDots" class="dots" aria-hidden="true"></div><div class="actions"><button id="tourBack" data-i18n="tourBack"></button><button id="tourNext" class="primary" data-i18n="tourNext"></button><button id="tourSkip" class="ghost" data-i18n="tourSkip"></button></div></dialog>
+<dialog id="dlgSettings" class="settings-dialog"><h2 data-i18n="settings"></h2>
+<label class="row"><span data-i18n="theme"></span><select id="themeMode"><option value="system" data-i18n="themeSystem"></option><option value="dark" data-i18n="themeDark"></option><option value="light" data-i18n="themeLight"></option></select></label>
+<label class="row"><input type="checkbox" id="soundOn"><span data-i18n="soundOn"></span></label>
+<label class="row"><span data-i18n="volume"></span><input type="range" id="soundVol" min="0" max="100" step="5"></label>
+<label class="row"><span data-i18n="soundPreview"></span><select id="soundPreview"><option value="click" data-i18n="sfxClick"></option><option value="create" data-i18n="sfxCreate"></option><option value="cut" data-i18n="sfxCut"></option><option value="edgeCreated" data-i18n="sfxCreated"></option><option value="edgeRemoved" data-i18n="sfxRemoved"></option><option value="conflict" data-i18n="sfxConflict"></option><option value="beacon" data-i18n="sfxBeacon"></option><option value="win" data-i18n="sfxWin"></option><option value="lose" data-i18n="sfxLose"></option><option value="draw" data-i18n="sfxDraw"></option></select></label>
+<div class="actions"><button id="soundTest" class="primary" data-snd="1" data-i18n="soundTest"></button></div>
+<label class="row"><input type="checkbox" id="motionReduce"><span data-i18n="motionReduce"></span></label>
+<div class="actions"><button id="settingsClose" class="primary" data-i18n="close"></button></div></dialog>
+<dialog id="dlgImport"><h2 data-i18n="importTitle"></h2><p data-i18n="importHint"></p><label class="file"><span data-i18n="chooseFile"></span> <input type="file" id="file" accept=".json,application/json"></label>
+<textarea id="importText" spellcheck="false"></textarea><p id="importMsg" class="err" role="alert"></p><div class="actions"><button id="importLoad" class="primary" data-i18n="load"></button><button id="importClose" class="ghost" data-i18n="close"></button></div></dialog>
+<dialog id="dlgExport"><h2 data-i18n="exportBtn"></h2><p data-i18n="exportFail"></p><textarea id="exportText" readonly spellcheck="false"></textarea><button id="exportClose" class="primary" data-i18n="close"></button></dialog>
+<dialog id="dlgOnline"><h2 data-i18n="online"></h2><p id="onlineNeeds" class="err" role="alert"></p>
+<div id="onlineMenu"><div class="actions"><button id="onlineCreate" class="primary" data-i18n="onlineCreate"></button></div>
+<label class="file"><span data-i18n="onlineCodeLabel"></span> <input id="onlineCode" class="mono" maxlength="8" inputmode="text" enterkeyhint="go" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"></label> <button id="onlineJoin" data-i18n="onlineJoin"></button></div>
+<div id="onlineRoom" hidden><p data-i18n="onlineShareHint"></p><p><span data-i18n="onlineCodeLabel"></span>: <strong id="onlineCodeShown" class="code mono"></strong></p>
+<input id="onlineCopyBox" class="mono" readonly hidden spellcheck="false"><div class="actions"><button id="onlineCopy" data-i18n="onlineCopy"></button><button id="onlineRetry" data-i18n="onlineRetry" hidden></button><button id="onlineLeave" class="ghost" data-i18n="onlineLeave"></button></div></div>
+<p id="onlineStatus" role="status"></p><p id="onlineError" class="err" role="alert"></p><button id="onlineClose" class="ghost" data-i18n="close"></button></dialog>
+<script src="src/constants.js"></script><script src="src/graph.js"></script><script src="src/rules.js"></script><script src="src/state.js"></script><script src="src/ai.js"></script><script src="src/controller.js"></script><script src="src/storage.js"></script><script src="src/replay.js"></script><script src="src/games.js"></script><script src="src/lab.js"></script><script src="src/online.js"></script><script src="src/sound.js"></script><script src="src/tasks.js"></script><script src="src/tasks-data.js"></script><script src="src/i18n.js"></script><script src="src/bots.js"></script>
+<script src="tests/harness.js"></script><script src="tests/graph.test.js"></script><script src="tests/resolution.test.js"></script><script src="tests/terminal.test.js"></script><script src="tests/repetition.test.js"></script><script src="tests/symmetry.test.js"></script><script src="tests/ai.test.js"></script><script src="tests/ui-smoke.test.js"></script><script src="tests/i18n.test.js"></script><script src="tests/online-client.test.js"></script><script src="tests/sound.test.js"></script><script src="tests/tasks.test.js"></script><script src="tests/replay.test.js"></script><script src="tests/games.test.js"></script><script src="tests/lab.test.js"></script>
+<script src="src/ui.js"></script><script src="src/tasks-ui.js"></script><script src="src/games-ui.js"></script><script src="src/lab-ui.js"></script><script src="src/account-ui.js"></script><script src="src/player-identity.js"></script>
+</body></html>

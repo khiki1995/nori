@@ -1,0 +1,18 @@
+'use strict';
+const path=require('path'); const root=path.join(__dirname,'..');
+['constants','graph','rules','state','ai'].forEach(f=>require(path.join(root,'src',f+'.js')));
+const N=globalThis.NORI, profiles=require(path.join(root,'src','bots-data.json'));
+N.bots={get:id=>profiles.find(b=>b.id===id)||null};
+const initial=N.state.createInitialState();
+const key=c=>JSON.stringify([c.node,c.action,c.edge]);
+const openingsBySide=[0,1].map(side=>profiles.map(b=>key(N.ai.chooseAIAction(initial,side,b.id))));
+const unique0=new Set(openingsBySide[0]).size, unique1=new Set(openingsBySide[1]).size;
+console.log('NORI quality benchmark V0.2.6');
+console.log('Rules version:',N.C.VERSION,'App version:',N.C.APP_VERSION);
+console.log('Profiles:',profiles.length);
+console.log('Distinct first choices as side 0:',unique0,'/',profiles.length);
+console.log('Distinct first choices as side 1:',unique1,'/',profiles.length);
+console.log('Different first choices across both sides:',new Set(openingsBySide.flat()).size,'/',profiles.length*2);
+console.log('Symmetry: run `npm test` for engine symmetry regression checks.');
+console.log('Self-play fairness: not inferred from opening diversity; use the batch runner in docs/QUALITY_CHECKPOINT.md before calibrating ratings.');
+console.log('Human retention: not inferred from AI tests; requires real player feedback.');

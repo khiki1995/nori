@@ -1,0 +1,5 @@
+player,action,probability
+white,3-4 CREATE uncommitted,0.5
+white,1-10 CREATE committed,0.5
+black,1-2 CUT committed,0.5
+black,8-9 CUT committed,0.5

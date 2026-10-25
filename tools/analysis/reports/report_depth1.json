@@ -1,0 +1,481 @@
+{
+ "tool": "nori-analysis",
+ "rules_version": "0.0.6",
+ "position": "standard start position",
+ "depth_rounds": 1,
+ "finished": true,
+ "stats": {
+  "states_visited_(matrices_started)": 1,
+  "unique_cache_keys": 1,
+  "matrices_solved": 1,
+  "lp_games_solved_(non_zero_matrices)": 0,
+  "cells_evaluated": 3136,
+  "terminal_cells": 0,
+  "cache_hits": 0,
+  "seconds": 0.03
+ },
+ "terminal_criteria": [
+  "simultaneous Signal Break -> draw (0)",
+  "single Signal Break -> win for the opponent (+1/-1 for White)",
+  "threefold repetition -> draw (0), checked only if no Signal Break"
+ ],
+ "boundary_evaluation": "non-terminal positions at the horizon get the neutral estimate 0.0. This is NOT a draw; it is an assumption about the unexplored continuation.",
+ "assumptions": [
+  "abstract actions (14 edges x 2 actions x 2 commitment classes = 56) are transition-equivalent to the 280 concrete choices"
+ ],
+ "exact_facts": "The root value is the exact value of the horizon-limited game with the boundary estimate above, computed by LP for every matrix. It is not a proof about the full game.",
+ "root_value_for_white": 0.0,
+ "white_strategy": [
+  {
+   "action": "1-2 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CUT uncommitted",
+   "p": 0.017857
+  }
+ ],
+ "black_strategy": [
+  {
+   "action": "1-2 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-2 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-3 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-4 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-5 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-6 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "6-7 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "7-8 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "8-9 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "9-10 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "1-10 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "2-7 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "3-8 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "4-9 CUT uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CREATE committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CREATE uncommitted",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CUT committed",
+   "p": 0.017857
+  },
+  {
+   "action": "5-10 CUT uncommitted",
+   "p": 0.017857
+  }
+ ],
+ "note_uniqueness": "Equilibrium strategies are not claimed to be unique."
+}

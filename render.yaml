@@ -1,0 +1,9 @@
+# Optional Render.com blueprint (free web service). Nothing is deployed by this file; the project owner connects the repository.
+services:
+  - type: web
+    name: nori
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health

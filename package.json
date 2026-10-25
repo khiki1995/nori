@@ -1,0 +1,20 @@
+{
+  "name": "nori",
+  "version": "0.2.7",
+  "private": true,
+  "description": "NORI V0.2.7 archetype benchmark, calibrated sound and Google OAuth setup guidance; rules V0.0.6 frozen",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node tests/run.js && node tests/run-server.js",
+    "test:local": "node tests/run.js",
+    "test:server": "node tests/run-server.js",
+    "benchmark": "node tools/archetype-benchmark.js",
+    "benchmark:quick": "node tools/archetype-benchmark.js --profile-limit=5 --repetitions=1 --round-cap=18"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

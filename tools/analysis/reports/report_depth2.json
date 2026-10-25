@@ -1,0 +1,41 @@
+{
+ "tool": "nori-analysis",
+ "rules_version": "0.0.6",
+ "position": "standard start position",
+ "depth_rounds": 2,
+ "finished": true,
+ "stats": {
+  "states_visited_(matrices_started)": 107,
+  "unique_cache_keys": 107,
+  "matrices_solved": 107,
+  "lp_games_solved_(non_zero_matrices)": 21,
+  "cells_evaluated": 335552,
+  "terminal_cells": 48760,
+  "cache_hits": 3030,
+  "seconds": 1.86
+ },
+ "terminal_criteria": [
+  "simultaneous Signal Break -> draw (0)",
+  "single Signal Break -> win for the opponent (+1/-1 for White)",
+  "threefold repetition -> draw (0), checked only if no Signal Break"
+ ],
+ "boundary_evaluation": "non-terminal positions at the horizon get the neutral estimate 0.0. This is NOT a draw; it is an assumption about the unexplored continuation.",
+ "assumptions": [
+  "abstract actions (14 edges x 2 actions x 2 commitment classes = 56) are transition-equivalent to the 280 concrete choices"
+ ],
+ "exact_facts": "The root value is the exact value of the horizon-limited game with the boundary estimate above, computed by LP for every matrix. It is not a proof about the full game.",
+ "root_value_for_white": 0.0,
+ "white_strategy": [
+  {
+   "action": "1-2 CREATE committed",
+   "p": 1.0
+  }
+ ],
+ "black_strategy": [
+  {
+   "action": "1-2 CREATE committed",
+   "p": 1.0
+  }
+ ],
+ "note_uniqueness": "Equilibrium strategies are not claimed to be unique."
+}

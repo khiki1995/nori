@@ -1,0 +1,3 @@
+player,action,probability
+white,1-2 CREATE committed,1.0
+black,1-2 CREATE committed,1.0
