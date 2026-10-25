@@ -231,9 +231,18 @@ function applyStatic() {
   document.title = t('title') + ' V' + C.APP_VERSION; $('#ver').textContent = 'V' + C.APP_VERSION; $('#legend').textContent = t('legend'); $('#lang').setAttribute('aria-label', t('lang'));
   $('#rulesTitle').textContent = t('rulesTitle'); $('#rulesBody').replaceChildren(...t('rulesBody').split('\n').map(l => el('p', {}, l))); renderTour();
 }
+// A won game against a catalog bot is sent to the server, which replays it and credits the bot's one-time coin reward.
+function claimBotWin(s) {
+  const r = s.state.result; if (s.mode !== 'ai' || !s.botId || !r || r.type !== 'win' || r.winner !== 0 || !/^https?:$/.test(location.protocol)) return;
+  let token = ''; try { token = localStorage.getItem('nori.account.token.v1') || ''; } catch (_) { /* storage off: guest */ } if (!token) return;
+  fetch('/api/rewards/bot-win', { method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify({ botId: s.botId, rounds: s.state.rounds.map(x => x.choices) }) })
+    .then(res => res.json().then(d => ({ status: res.status, d })))
+    .then(({ status, d }) => { if (session !== s) return; notice = d.ok ? t('rwGranted', { n: d.coins }) : status === 409 ? t('rwAlready') : t('rwFailed'); render(); })
+    .catch(() => { if (session === s) { notice = t('rwFailed'); render(); } });
+}
 function render() {
   const v = curView(), on = onl().active;
-  if (!on && session && session.state && session.state.result && N.games && archivedSession !== session) { N.games.recordFinished(session, store); archivedSession = session; }
+  if (!on && session && session.state && session.state.result && N.games && archivedSession !== session) { N.games.recordFinished(session, store); archivedSession = session; claimBotWin(session); }
   applyStatic(); renderPhase(v); renderBoard(v); renderCards(v); renderPanel(v); renderLog(v); renderSave(); renderOnline();
   ['#new', '#mode', '#exportBtn', '#importBtn'].forEach(q => { $(q).disabled = on; }); // local-only actions are off while a room is active
   $('#undo').disabled = !v.canUndo; $('#notice').textContent = onl().error ? errText(onl().error) : on ? t('onlineUndoOff') : notice;
@@ -289,12 +298,24 @@ $('#importLoad').onclick = () => { // a failed import never replaces the current
   if (!r.ok) { $('#importMsg').textContent = importError(r); return; }
   shut($('#dlgImport')); setSession(r.session, t('importOk'));
 };
+// Self-check suites are loaded on demand, so a normal page load never downloads the test files.
+const SELFTEST_SUITES = ['graph', 'resolution', 'terminal', 'repetition', 'symmetry', 'ai', 'ui-smoke', 'i18n', 'online-client', 'sound', 'tasks', 'replay', 'games', 'lab'];
+const loadScript = src => new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => bad(new Error(src)); document.body.append(s); });
+let selftestLoading = null;
+function loadSelftest() {
+  if (!selftestLoading) selftestLoading = ['tests/harness.js'].concat(SELFTEST_SUITES.map(n => 'tests/' + n + '.test.js')).reduce((p, src) => p.then(() => loadScript(src)), Promise.resolve());
+  return selftestLoading.catch(e => { selftestLoading = null; throw e; });
+}
 $('#selftest').onclick = () => {
+  const box = $('#tests'); box.hidden = false; box.replaceChildren(el('p', { class: 'hint' }, '…'));
+  loadSelftest().then(runSelftest, e => { box.replaceChildren(el('div', { class: 'fail' }, '✗ ' + e.message)); });
+};
+function runSelftest() {
   const box = $('#tests'), suites = window.NORI_SUITES || {}, res = [];
   Object.keys(suites).forEach(n => { suites[n](N, window.NORI_HARNESS, { I18N: I }).forEach(r => res.push(Object.assign({ suite: n }, r))); });
   const pass = res.filter(r => r.ok && !r.skipped).length, fail = res.filter(r => !r.ok).length;
   box.hidden = false; box.replaceChildren(el('h2', {}, t('testsTitle', { a: pass, b: fail })), ...res.map(r => el('div', { class: r.skipped ? 'hint' : r.ok ? 'pass' : 'fail' }, (r.skipped ? '○ ' : r.ok ? '✓ ' : '✗ ') + r.suite + ': ' + r.name + (r.err ? ' — ' + r.err : ''))));
-};
+}
 $('#mode').onchange = () => newGame($('#mode').value);
 $('#onlineBtn').onclick = () => { copyMsg = ''; renderOnline(); open($('#dlgOnline')); };
 $('#onlineClose').onclick = () => shut($('#dlgOnline'));

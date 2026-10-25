@@ -31,7 +31,7 @@ t('settings persist (enabled and volume) and malformed storage is ignored', () =
   const bad = mem(); bad.m[S.KEY] = '{not json'; deq(S.createSound({ storage: bad, Audio: FakeAudio }).get(), { enabled: true, volume: 0.58 });
   const broken = { getItem() { throw new Error('x'); }, setItem() { throw new Error('x'); } }; const c = S.createSound({ storage: broken, Audio: FakeAudio }); c.setEnabled(false); eq(c.get().enabled, false);
 });
-t('missing browser audio support never breaks the game', () => { eq(S.createSound({ storage: mem() }).play('click'), false); eq(S.createSound({ storage: mem(), Audio: FakeAudio }).play('nope'), false); });
+t('missing browser audio support never breaks the game', () => { eq(S.createSound({ storage: mem(), Audio: null }).play('click'), false); eq(S.createSound({ storage: mem(), Audio: FakeAudio }).play('nope'), false); });
 t('a blocked browser playback is handled without throwing', () => { fresh(); FakeAudio.reject = true; const s = S.createSound({ storage: mem(), Audio: FakeAudio }); eq(s.play('confirm'), true); eq(FakeAudio.made, 1); });
 t('sound module has no remote requests; every local audio asset exists', () => {
   if (!env.fs) return 'SKIP'; const src = env.fs.readFileSync(env.path.join(env.root, 'src', 'sound.js'), 'utf8');

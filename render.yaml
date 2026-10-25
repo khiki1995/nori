@@ -4,6 +4,9 @@ services:
     name: nori
     runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /health
+    envVars:
+      - key: TRUST_PROXY
+        value: "1"

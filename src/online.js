@@ -30,6 +30,8 @@ function createClient(deps) {
   const fresh = () => ({ status: 'idle', active: false, code: null, playerIndex: null, game: null, youLocked: false, sending: false, opponentLocked: false, opponentPresent: false, opponentConnected: false, ackRounds: null, error: null, attempts: 0 });
   let model = fresh(), ws = null, timer = null, closedByUs = false, hadRoom = false, mode = null; const listeners = [];
   const store = () => (st ? loadStore(st) : { tokens: {}, last: null });
+  // Signed-in players send their account token with create/join so the server can rate the finished game.
+  const withAuth = o => { let a = ''; try { a = st ? st.getItem('nori.account.token.v1') || '' : ''; } catch (e) { /* storage off */ } return /^[A-Za-z0-9_-]{16,200}$/.test(a) ? Object.assign(o, { auth: a }) : o; };
   const emit = () => listeners.forEach(f => f(model));
   const send = o => { if (ws && ws.readyState === 1) { ws.send(JSON.stringify(Object.assign({ v: V }, o))); return true; } return false; };
   const dropSocket = () => { closedByUs = true; if (ws) { try { ws.close(); } catch (e) { /* ignore */ } ws = null; } if (timer) { clrT(timer); timer = null; } };
@@ -88,11 +90,11 @@ function createClient(deps) {
   function resumeNow() { const tok = store().tokens[model.code]; if (!tok) return abandon('BAD_TOKEN'); open({ type: 'resume_room', code: model.code, token: tok }, 'resume'); }
   return {
     getModel: () => model, subscribe: f => { listeners.push(f); }, makeView: () => makeView(model), wsUrl: () => wsUrl(loc),
-    createRoom() { if (model.active) return false; model = fresh(); hadRoom = false; return open({ type: 'create_room' }, 'create'); },
+    createRoom() { if (model.active) return false; model = fresh(); hadRoom = false; return open(withAuth({ type: 'create_room' }), 'create'); },
     joinRoom(raw) {
       if (model.active) return false; const code = normCode(raw); model = fresh(); hadRoom = false;
       const tok = store().tokens[code]; if (tok) { model.code = code; return open({ type: 'resume_room', code, token: tok }, 'resume'); }   // we already own a seat here
-      return open({ type: 'join_room', code }, 'join');
+      return open(withAuth({ type: 'join_room', code }), 'join');
     },
     resumeSaved() { const d = store(); if (!d.last || !d.tokens[d.last] || model.active) return false; model = fresh(); model.code = d.last; return open({ type: 'resume_room', code: d.last, token: d.tokens[d.last] }, 'resume'); },
     retry() { if (!model.code || model.status === 'connected') return false; model.attempts = 0; if (timer) { clrT(timer); timer = null; } if (ws) dropSocket(); resumeNow(); return true; },

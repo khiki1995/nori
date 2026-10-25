@@ -14,7 +14,7 @@ t('AI picks the candidate with the best worst-case value (maximin, average tie-b
   const chosen = list.find(c => JSON.stringify(c.choice) === JSON.stringify(pick)); eq(chosen.min, best.min); eq(chosen.avg, best.avg);
 });
 t('20 catalog profiles produce legal AI choices with more than one opening policy', () => {
-  const profiles = require('../src/bots-data.json'), prior = N.bots, picks = [];
+  const profiles = typeof require === 'function' ? require('../src/bots-data.json') : N.bots.list(), prior = N.bots, picks = [];
   N.bots = { get: id => profiles.find(b => b.id === id) || null };
   try {
     const state = S.createInitialState();
@@ -55,6 +55,22 @@ t('repeated-state history penalizes reusing the same move from that position', (
   ];
   eq(N.ai.cycleBreakBias(state, 0, prior), -8);
   eq(N.ai.cycleBreakBias(state, 0, C(2, 'CREATE', '2-3')), 0);
+});
+t('fast bitmask analysis equals the frozen rules (stepCore) on every choice pair of sampled positions', () => {
+  const F = N.ai._fast, A = N.ai.ABSTRACT, plain = c => ({ node: c.node, action: c.action, edge: c.edge });
+  let st = S.createInitialState(), checked = 0, seed = 7;
+  const rnd = n => { seed = (seed * 1103515245 + 12345) >>> 0; return seed % n; };
+  for (let pos = 0; pos < 6 && !st.result; pos++) {
+    const mask = F.edgeMask(st.edges);
+    for (let i = 0; i < A.length; i += 3) for (let j = 0; j < A.length; j++) {
+      const ref = S.stepCore(st.edges, st.streak, st.seen, [plain(A[i]), plain(A[j])]), fast = F.stepFast(mask, st.streak, st.seen, F.FAST[i], F.FAST[j]);
+      eq(fast.mask, F.edgeMask(ref.resolved.edges), 'edges ' + i + '/' + j); deq([fast.s0, fast.s1], ref.streak, 'streak');
+      eq(fast.result ? fast.result.code : null, ref.result ? ref.result.code : null, 'result'); eq(fast.result ? fast.result.winner : null, ref.result ? ref.result.winner : null, 'winner');
+      eq(fast.seenCount, ref.seenCount, 'seenCount'); checked++;
+    }
+    st = S.playRound(st, [plain(A[rnd(A.length)]), plain(A[rnd(A.length)])]);
+  }
+  ok(checked > 3000, 'checked ' + checked);
 });
 return results;
 });

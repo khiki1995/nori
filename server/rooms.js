@@ -13,6 +13,8 @@ class RoomManager {
   constructor(o = {}) {
     this.now = o.now || Date.now; this.maxRooms = o.maxRooms || 500; this.disconnectTtlMs = o.disconnectTtlMs || 30 * 60e3; this.roomTtlMs = o.roomTtlMs || 6 * 3600e3;
     this.randomInt = o.randomInt || crypto.randomInt; this.randomBytes = o.randomBytes || crypto.randomBytes; this.rooms = new Map();
+    // Optional account hooks: identify(authToken) -> userId|null; onRated(userIdWhite, userIdBlack, scoreWhite) once per finished game.
+    this.identify = o.identify || (() => null); this.onRated = o.onRated || null;
   }
   send(conn, obj) { try { conn.send(Object.assign({ v: P.VERSION }, obj)); } catch (e) { /* a dead socket must not break room logic */ } }
   error(conn, code, extra) { this.send(conn, Object.assign({ type: 'error', code, message: ERR_MSG[code] || ERR_MSG.INTERNAL }, extra || {})); }
@@ -33,8 +35,8 @@ class RoomManager {
   handle(conn, msg) {
     try {
       switch (msg.type) {
-        case 'create_room': return this.create(conn);
-        case 'join_room': return this.join(conn, msg.code);
+        case 'create_room': return this.create(conn, msg.auth);
+        case 'join_room': return this.join(conn, msg.code, msg.auth);
         case 'resume_room': return this.resume(conn, msg.code, msg.token);
         case 'submit_choice': return this.submit(conn, msg.round, msg.choice);
         case 'request_snapshot': return conn.seat ? this.send(conn, { type: 'snapshot', snapshot: this.snapshot(conn.seat.room, conn.seat.index) }) : this.error(conn, 'NOT_IN_ROOM');
@@ -42,19 +44,20 @@ class RoomManager {
       }
     } catch (e) { this.error(conn, 'INTERNAL'); } // never leak internals or stack traces
   }
-  create(conn) {
+  userIdFor(auth) { if (!auth) return null; try { return this.identify(auth) || null; } catch (e) { return null; } }
+  create(conn, auth) {
     if (conn.seat) return this.error(conn, 'ALREADY_IN_ROOM');
     if (this.rooms.size >= this.maxRooms) return this.error(conn, 'SERVER_BUSY');
     const code = this.newCode(); if (!code) return this.error(conn, 'SERVER_BUSY');
-    const token = this.newToken(), room = { code, seats: [{ hash: sha(token), conn: null, disconnectedAt: null }, null], state: N.state.createInitialState(), pending: [null, null], created: this.now(), lastActivity: this.now(), allDisconnectedAt: null };
+    const token = this.newToken(), room = { code, seats: [{ hash: sha(token), conn: null, disconnectedAt: null, userId: this.userIdFor(auth) }, null], state: N.state.createInitialState(), pending: [null, null], created: this.now(), lastActivity: this.now(), allDisconnectedAt: null };
     this.rooms.set(code, room); this.bind(conn, room, 0);
     this.send(conn, { type: 'room_created', code, playerIndex: 0, token, snapshot: this.snapshot(room, 0) });
   }
-  join(conn, code) {
+  join(conn, code, auth) {
     if (conn.seat) return this.error(conn, 'ALREADY_IN_ROOM');
     const room = this.rooms.get(code); if (!room) return this.error(conn, 'ROOM_NOT_FOUND');
     if (room.seats[1]) return this.error(conn, 'ROOM_FULL');   // an occupied seat can only be reclaimed with its token
-    const token = this.newToken(); room.seats[1] = { hash: sha(token), conn: null, disconnectedAt: null }; this.bind(conn, room, 1);
+    const token = this.newToken(); room.seats[1] = { hash: sha(token), conn: null, disconnectedAt: null, userId: this.userIdFor(auth) }; this.bind(conn, room, 1);
     this.send(conn, { type: 'room_joined', code, playerIndex: 1, token, snapshot: this.snapshot(room, 1) }); this.lobby(room);
   }
   resume(conn, code, token) {
@@ -78,7 +81,15 @@ class RoomManager {
     if (!(room.pending[0] && room.pending[1])) return;
     const next = N.state.playRound(st, [room.pending[0], room.pending[1]]);   // exactly one authoritative transition
     room.state = next; room.pending = [null, null]; const rec = next.rounds[next.rounds.length - 1];
+    if (next.result) this.rate(room);
     room.seats.forEach((s, i) => { if (s && s.conn) this.send(s.conn, { type: 'round_resolved', round: rec.round, choices: rec.choices, record: rec, snapshot: this.snapshot(room, i) }); });
+  }
+  // A game between two different signed-in accounts updates both ratings exactly once.
+  rate(room) {
+    const [w, b] = room.seats.map(s => s && s.userId), res = room.state.result;
+    if (!this.onRated || room.rated || !w || !b || w === b || !res) return;
+    room.rated = true; const scoreW = res.type === 'draw' ? 0.5 : res.winner === 0 ? 1 : 0;
+    try { this.onRated(w, b, scoreW); } catch (e) { /* rating storage failure must not break the game */ }
   }
   disconnect(conn) {
     const seat = conn.seat; if (!seat) return; conn.seat = null;

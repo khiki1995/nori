@@ -18,7 +18,7 @@ function loadCfg(st) {
 }
 function createSound(deps) {
   deps = deps || {};
-  const st = deps.storage, AudioCtor = deps.Audio || (typeof Audio !== 'undefined' ? Audio : null);
+  const st = deps.storage, AudioCtor = deps.Audio !== undefined ? deps.Audio : (typeof Audio !== 'undefined' ? Audio : null);   // Audio: null = no audio support (tests)
   const assetBase = typeof deps.assetBase === 'string' ? deps.assetBase : 'assets/sounds/';
   const isHidden = deps.isHidden || (() => typeof document !== 'undefined' && !!document.hidden);
   let cfg = st ? loadCfg(st) : { enabled: true, volume: 0.58 };
